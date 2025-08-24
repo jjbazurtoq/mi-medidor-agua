@@ -1,0 +1,31 @@
+name: Mi Empleado Que Envía Datos
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'  # Cada 5 minutos
+  workflow_dispatch:  # También puede trabajar manualmente
+
+jobs:
+  enviar-datos:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Descargar mi código
+      uses: actions/checkout@v4
+      
+    - name: Preparar Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: Instalar herramientas
+      run: |
+        pip install paho-mqtt requests
+        
+    - name: Ejecutar mi programa
+      env:
+        MQTT_SERVIDOR: ${{ secrets.MQTT_SERVIDOR }}
+        MQTT_USUARIO: ${{ secrets.MQTT_USUARIO }}
+        MQTT_CONTRASEÑA: ${{ secrets.MQTT_CONTRASEÑA }}
+        GOOGLE_URL: ${{ secrets.GOOGLE_URL }}
+      run: python mi-programa.py
